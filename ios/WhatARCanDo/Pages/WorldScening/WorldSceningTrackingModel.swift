@@ -76,7 +76,8 @@ class WorldSceningTrackingModel: TrackingModel {
     
     @MainActor fileprivate func createMeshEntity(_ geometry: ARMeshGeometry, _ anchor: ARMeshAnchor) async throws {
         let modelEntity = try await generateModelEntity(geometry: geometry)
-        let anchorEntity = AnchorEntity(anchor: anchor)
+        let anchorEntity = Entity()
+        anchorEntity.transform = Transform(matrix: anchor.transform)
         anchorEntity.addChild(modelEntity)
         anchorEntity.name = "MeshAnchor-\(anchor.identifier)"
         rootEntity.addChild(anchorEntity)
@@ -86,6 +87,7 @@ class WorldSceningTrackingModel: TrackingModel {
         let modelEntity = try await generateModelEntity(geometry: geometry)
         if let anchorEntity = rootEntity.findEntity(named: "MeshAnchor-\(anchor.identifier)") {
             anchorEntity.children.removeAll()
+            anchorEntity.transform = Transform(matrix: anchor.transform)
             anchorEntity.addChild(modelEntity)
         }
     }
@@ -116,7 +118,7 @@ class WorldSceningTrackingModel: TrackingModel {
             )
         }
         let meshResource = try MeshResource.generate(from: [desc])
-        let material = SimpleMaterial(color: .red, isMetallic: false)
+        let material = SimpleMaterial(color: .red, isMetallic: true)
         let modelEntity = ModelEntity(mesh: meshResource, materials: [material])
         return modelEntity
     }

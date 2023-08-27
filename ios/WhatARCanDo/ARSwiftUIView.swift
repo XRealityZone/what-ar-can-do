@@ -20,7 +20,7 @@ struct ARSwiftUIView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ARView {
         let view = ARView()
-
+        view.automaticallyConfigureSession = false
         let session = trackingModel.session
         view.session = session
         view.scene.addAnchor(trackingModel.rootEntity)
